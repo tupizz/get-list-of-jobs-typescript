@@ -6,7 +6,9 @@
     "build": "ts-engine build --node-app",
     "lint": "ts-engine lint",
     "start": "ts-engine start",
-    "test": "ts-engine test",
+    "test": "jest --passWithNoTests --noStackTrace --runInBand",
+    "test:verbose": "jest --passWithNoTests",
+    "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "typecheck": "ts-engine typecheck"
   },
   "dependencies": {
@@ -16,6 +18,7 @@
     "@ts-engine/cli": "^1.11.0",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
+    "@types/jest": "^26.0.7",
     "eslint": "^7.13.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^6.15.0",
@@ -23,6 +26,7 @@
     "eslint-plugin-import-helpers": "^1.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.6.3",
+    "ts-jest": "^26.1.3",
     "prettier": "^2.2.0"
   }
 }
