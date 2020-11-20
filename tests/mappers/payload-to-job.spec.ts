@@ -1,5 +1,5 @@
-import { MapPayloadToJob } from '../../../src/mappers/payload-to-job';
-import { Payload } from '../../../src/model/index.model';
+import { MapPayloadToJob } from '../../src/mappers/payload-to-job';
+import { Payload } from '../../src/model/index.model';
 import * as invalidPayload from './payload/invalid-payload.json';
 import * as validPayload from './payload/valid-payload.json';
 
