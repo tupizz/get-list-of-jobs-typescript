@@ -12,7 +12,11 @@
     "typecheck": "ts-engine typecheck"
   },
   "dependencies": {
-    "@ts-engine/runtime": "^1.11.0"
+    "@ts-engine/runtime": "^1.11.0",
+    "date-fns": "^2.16.1",
+    "date-fns-tz": "^1.0.12",
+    "joi": "^17.3.0",
+    "spacetime": "^6.10.0"
   },
   "devDependencies": {
     "@ts-engine/cli": "^1.11.0",
