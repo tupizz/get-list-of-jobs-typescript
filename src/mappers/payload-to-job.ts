@@ -1,8 +1,8 @@
 import { parse } from 'date-fns';
 import * as Joi from 'joi';
 
-import { ValidationError } from '../../errors/validation.error';
-import { JobDto, Payload } from '../index.model';
+import { ValidationError } from '../errors/validation.error';
+import { JobDto, Payload } from '../model/index.model';
 
 export class MapPayloadToJob {
   private static getDateFromPayload(date: string) {
