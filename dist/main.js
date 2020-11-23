@@ -5,7 +5,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var _regeneratorRuntime = require('@babel/runtime/regenerator');
 var _asyncToGenerator = require('@babel/runtime/helpers/asyncToGenerator');
 var _classCallCheck = require('@babel/runtime/helpers/classCallCheck');
-var _createClass = require('@babel/runtime/helpers/createClass');
 var _inherits = require('@babel/runtime/helpers/inherits');
 var _possibleConstructorReturn = require('@babel/runtime/helpers/possibleConstructorReturn');
 var _getPrototypeOf = require('@babel/runtime/helpers/getPrototypeOf');
@@ -19,7 +18,6 @@ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'defau
 var _regeneratorRuntime__default = /*#__PURE__*/_interopDefaultLegacy(_regeneratorRuntime);
 var _asyncToGenerator__default = /*#__PURE__*/_interopDefaultLegacy(_asyncToGenerator);
 var _classCallCheck__default = /*#__PURE__*/_interopDefaultLegacy(_classCallCheck);
-var _createClass__default = /*#__PURE__*/_interopDefaultLegacy(_createClass);
 var _inherits__default = /*#__PURE__*/_interopDefaultLegacy(_inherits);
 var _possibleConstructorReturn__default = /*#__PURE__*/_interopDefaultLegacy(_possibleConstructorReturn);
 var _getPrototypeOf__default = /*#__PURE__*/_interopDefaultLegacy(_getPrototypeOf);
@@ -44,20 +42,9 @@ var ValidationError = /*#__PURE__*/function (_Error) {
   return ValidationError;
 }( /*#__PURE__*/_wrapNativeSuper__default['default'](Error));
 
-var DateUtils = /*#__PURE__*/function () {
-  function DateUtils() {
-    _classCallCheck__default['default'](this, DateUtils);
-  }
-
-  _createClass__default['default'](DateUtils, null, [{
-    key: "getParsedDate",
-    value: function getParsedDate(date) {
-      return dateFns.parse(date, 'yyyy-MM-dd kk:mm:ss', new Date(date));
-    }
-  }]);
-
-  return DateUtils;
-}();
+var getParsedDate = function getParsedDate(date) {
+  return dateFns.parse(date, 'yyyy-MM-dd kk:mm:ss', new Date(date));
+};
 
 var payloadSchema = Joi.object({
   'ID': Joi.number().required(),
@@ -66,37 +53,21 @@ var payloadSchema = Joi.object({
   'Tempo estimado': Joi.string().pattern(new RegExp(/[0-9]{1} horas/)).required()
 });
 
-var MapPayloadToJob = /*#__PURE__*/function () {
-  function MapPayloadToJob() {
-    _classCallCheck__default['default'](this, MapPayloadToJob);
+var payloadToJobDto = function payloadToJobDto(payload) {
+  var _payloadSchema$valida = payloadSchema.validate(payload),
+      error = _payloadSchema$valida.error;
+
+  if (error) {
+    throw new ValidationError();
   }
 
-  _createClass__default['default'](MapPayloadToJob, null, [{
-    key: "validate",
-    value: function validate(payload) {
-      return payloadSchema.validate(payload);
-    }
-  }, {
-    key: "transform",
-    value: function transform(payload) {
-      var _this$validate = this.validate(payload),
-          error = _this$validate.error;
-
-      if (error) {
-        throw new ValidationError();
-      }
-
-      return {
-        description: payload['Descrição'],
-        estimatedHoursToFinish: parseInt(payload['Tempo estimado'].split(' ')[0]),
-        id: payload['ID'],
-        maxDateToFinish: DateUtils.getParsedDate(payload['Data Máxima de conclusão'])
-      };
-    }
-  }]);
-
-  return MapPayloadToJob;
-}();
+  return {
+    description: payload['Descrição'],
+    estimatedHoursToFinish: parseInt(payload['Tempo estimado'].split(' ')[0]),
+    id: payload['ID'],
+    maxDateToFinish: getParsedDate(payload['Data Máxima de conclusão'])
+  };
+};
 
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
@@ -144,9 +115,9 @@ var orderByPriority = function orderByPriority(start, jobs) {
 var MAX_TIME = 8;
 var getArrayOfJobs = function getArrayOfJobs(payloads, executionWindow) {
   var jobDtos = payloads.map(function (payloadItem) {
-    return MapPayloadToJob.transform(payloadItem);
+    return payloadToJobDto(payloadItem);
   });
-  var startAsDate = DateUtils.getParsedDate(executionWindow.start);
+  var startAsDate = getParsedDate(executionWindow.start);
   var orderedJobs = orderByPriority(startAsDate, jobDtos);
   return chunkItemsIdByMaxTimeOfDay(MAX_TIME, orderedJobs);
 };

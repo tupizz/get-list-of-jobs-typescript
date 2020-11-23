@@ -1,11 +1,11 @@
-import { MapPayloadToJob } from '../../src/mappers/payload-to-job';
+import { payloadToJobDto } from '../../src/mappers/payload-to-job';
 import { Payload } from '../../src/model/index.model';
 import * as invalidPayload from './payload/invalid-payload.json';
 import * as validPayload from './payload/valid-payload.json';
 
 describe('Payload to Job', () => {
   test('Given a valid paylod should return a valid job dto model', () => {
-    const items = validPayload.map((item: Payload) => MapPayloadToJob.transform(item));
+    const items = validPayload.map((item: Payload) => payloadToJobDto(item));
     expect(items).toBeTruthy();
     expect(items).toStrictEqual([
       {
@@ -31,7 +31,7 @@ describe('Payload to Job', () => {
 
   test('Given an invalid paylod should throw an error', () => {
     expect(() => {
-      MapPayloadToJob.transform(invalidPayload);
+      payloadToJobDto(invalidPayload);
     }).toThrow(Error);
   });
 });

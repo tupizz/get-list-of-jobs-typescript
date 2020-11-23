@@ -1,14 +1,14 @@
-import { MapPayloadToJob } from './mappers/payload-to-job';
+import { payloadToJobDto } from './mappers/payload-to-job';
 import { Payload, ExecutionWindow } from './model/index.model';
 import { chunkItemsIdByMaxTimeOfDay } from './utils/chunk-items-by-max-time';
-import { DateUtils } from './utils/date-utils';
+import { getParsedDate } from './utils/date-utils';
 import { orderByPriority } from './utils/order-by-priority';
 
 const MAX_TIME = 8;
 
 export const getArrayOfJobs = (payloads: Payload[], executionWindow: ExecutionWindow) => {
-  const jobDtos = payloads.map((payloadItem) => MapPayloadToJob.transform(payloadItem));
-  const startAsDate = DateUtils.getParsedDate(executionWindow.start);
+  const jobDtos = payloads.map((payloadItem) => payloadToJobDto(payloadItem));
+  const startAsDate = getParsedDate(executionWindow.start);
   const orderedJobs = orderByPriority(startAsDate, jobDtos);
   return chunkItemsIdByMaxTimeOfDay(MAX_TIME, orderedJobs);
 };
